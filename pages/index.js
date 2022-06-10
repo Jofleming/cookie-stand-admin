@@ -2,38 +2,35 @@ import { loadGetInitialProps } from 'next/dist/shared/lib/utils'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useState } from 'react';
+import { useAuth } from '../contexts/auth'
+import useResource from '../hooks/useResource'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StandForm from '../components/StandForm';
 import ReportTable from '../components/ReportTable';
+import CookieStandAdmin from '../components/CookieStandAdmin';
+import LoginForm from '../components/LoginForm';
 
 export default function Home() {
 
-  const [locationData, setlocationData] = useState([]);
-
-  function storeCreationHandler(newlocationData) {
-
-    setlocationData([...locationData, newlocationData]);
-  }
+  const { user, login } = useAuth();
 
   return (
     <div>
-      <Header />
-      <main className='flex flex-col items-center'>
-        <StandForm onCreate={storeCreationHandler}/>
-        <ReportTable locationData={locationData}/>
-        {/* <LatestStand locationData={locationData}/> */}
-      </main>
-      <Footer copywright='2022' count={locationData.length}/>
+      <Head>
+        <title>Cookie Stand Admin</title>
+      </Head>
+      {user ?
+        <CookieStandAdmin />
+        :
+        <LoginForm onLogin={login} />
+      }
+
     </div>
   )
 }
 
 
-// function LatestStand({ locationData }) {
-//   return <p>Latest Store: {JSON.stringify(locationData)}</p>
-// }
 
 
 

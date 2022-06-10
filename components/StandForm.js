@@ -1,16 +1,21 @@
 import { hourly_sales } from "../data";
+import useResource from '../hooks/useResource';
+import { useAuth } from "../contexts/auth";
 
 export default function StandForm({ onCreate }) {
+
+    const { user } = useAuth();
+    const { createResource } = useResource();
 
     function handleCreate(e) {
         e.preventDefault();
         var locationData = {}
         locationData["Location"] = e.target.location.value;
-        locationData["Minimum Customers per Hour"] = parseInt(e.target.minCust.value);
-        locationData["Maximum Customers per Hour"] = parseInt(e.target.maxCust.value);
-        locationData["Average Cookies per Hour"] = parseInt(e.target.avgCookies.value);
-        locationData["HourlySales"] = hourly_sales.map(hour => Math.floor(Math.random() * (e.target.maxCust.value - e.target.minCust.value) + e.target.minCust.value))
-        onCreate(locationData);
+        locationData["minimum_customers_per_hour"] = parseInt(e.target.minCust.value);
+        locationData["maximum_customers_per_hour"] = parseInt(e.target.maxCust.value);
+        locationData["average_cookies_per_sale"] = parseInt(e.target.avgCookies.value);
+        locationData["owner"] = user.id;
+        createResource(locationData);
         e.target.reset();
 
     }
